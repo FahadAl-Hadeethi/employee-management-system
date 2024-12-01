@@ -1,14 +1,32 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const EmployeeList = () => {
   const [employees, setEmployees] = useState([]);
+  const navigate = useNavigate();
+
+  // Fetch employees from the backend
   const fetchEmployees = async () => {
     try {
-      const response = await api.get('/emp/employees');
+      const response = await api.get('/api/v1/emp/employees'); // Ensure this matches the backend endpoint
       setEmployees(response.data);
     } catch (error) {
-      console.error(error.response.data.message);
+      console.error(error.response?.data?.message || 'Failed to fetch employees');
+    }
+  };
+
+  // Delete an employee
+  const deleteEmployee = async (id) => {
+    if (window.confirm('Are you sure you want to delete this employee?')) {
+      try {
+        await api.delete(`/api/v1/emp/employees/${id}`);
+        alert('Employee deleted successfully');
+        fetchEmployees(); // Refresh the list after deletion
+      } catch (error) {
+        console.error(error.response?.data?.message || 'Failed to delete employee');
+        alert('Failed to delete employee');
+      }
     }
   };
 
@@ -80,7 +98,7 @@ const EmployeeList = () => {
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Employees List</h2>
-      <button style={styles.addButton} onClick={() => alert('Add Employee clicked')}>
+      <button style={styles.addButton} onClick={() => navigate('/add-employee')}>
         Add Employee
       </button>
       <table style={styles.table}>
@@ -100,26 +118,33 @@ const EmployeeList = () => {
               <td style={styles.td}>{employee.email}</td>
               <td style={styles.td}>
                 <button
+                  style={{ ...styles.button, ...styles.viewButton }}
+                  onClick={() => navigate(`/view-employee/${employee._id}`)}
+                >
+                  View
+                </button>
+                <button
                   style={{ ...styles.button, ...styles.updateButton }}
-                  onClick={() => alert('Update clicked')}
+                  onClick={() => navigate(`/update-employee/${employee._id}`)}
                 >
                   Update
                 </button>
                 <button
                   style={{ ...styles.button, ...styles.deleteButton }}
-                  onClick={() => alert('Delete clicked')}
+                  onClick={() => deleteEmployee(employee._id)}
                 >
                   Delete
-                </button>
-                <button
-                  style={{ ...styles.button, ...styles.viewButton }}
-                  onClick={() => alert('View clicked')}
-                >
-                  View
                 </button>
               </td>
             </tr>
           ))}
+          {employees.length === 0 && (
+            <tr>
+              <td style={styles.td} colSpan="4">
+                No employees found.
+              </td>
+            </tr>
+          )}
         </tbody>
       </table>
     </div>
