@@ -1,14 +1,15 @@
 {
-  "name": "101432174_comp3123_assignment1",
+  "name": "backend",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "dev": "nodemon index.js" 
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Backend for Employee Management System",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
@@ -16,5 +17,8 @@
     "express-validator": "^7.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1"
+  },
+  "engines": {
+    "node": ">=16.x"
   }
 }
