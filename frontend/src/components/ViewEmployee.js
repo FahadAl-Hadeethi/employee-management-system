@@ -12,7 +12,7 @@ const ViewEmployee = () => {
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
-        const response = await api.get(`/api/v1/emp/employees/${id}`); // Corrected endpoint
+        const response = await api.get(`/api/v1/emp/employees/${id}`);
         setEmployee(response.data);
       } catch (err) {
         setError('Failed to load employee details');

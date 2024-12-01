@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const employeeRoutes = require('./routes/employeeRoutes');
-const cors = require('cors'); // Import CORS
+const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
@@ -16,7 +16,7 @@ const allowedOrigins = [
 app.use(cors({
   origin: allowedOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  credentials: true, // 
+  credentials: true, 
 }));
 
 // Connect to MongoDB

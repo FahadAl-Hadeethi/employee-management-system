@@ -51,7 +51,6 @@ const UpdateEmployee = () => {
     }
   };
 
-  // Inline styles
   const styles = {
     container: {
       maxWidth: '600px',

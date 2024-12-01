@@ -11,7 +11,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await api.post('/api/v1/user/login', { email, password }); // Corrected endpoint
+      const response = await api.post('/api/v1/user/login', { email, password });
       localStorage.setItem('token', response.data.token); // Store token in localStorage
       alert('Login successful!');
       navigate('/employees'); // Navigate to the employee list page
@@ -20,7 +20,6 @@ const Login = () => {
     }
   };  
 
-  // Inline styles for a polished design
   const styles = {
     container: {
       display: 'flex',

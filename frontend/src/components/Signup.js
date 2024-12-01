@@ -12,7 +12,7 @@ const Signup = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/api/v1/user/signup', { username, email, password }); // Corrected endpoint
+      await api.post('/api/v1/user/signup', { username, email, password });
       alert('Signup successful! Please login.');
       navigate('/'); // Redirect to the Login page
     } catch (error) {
