@@ -37,6 +37,12 @@ const EmployeeList = () => {
     setFilteredEmployees(filtered);
   };
 
+  // Handle logout
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    navigate('/'); // Redirect to login page
+  };
+
   const deleteEmployee = async (id) => {
     if (window.confirm('Are you sure you want to delete this employee?')) {
       try {
@@ -59,12 +65,25 @@ const EmployeeList = () => {
       borderRadius: '10px',
       boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)',
     },
-    title: {
-      textAlign: 'center',
+    header: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
       marginBottom: '20px',
+    },
+    title: {
       fontSize: '24px',
       fontWeight: 'bold',
       color: '#333',
+    },
+    logoutButton: {
+      backgroundColor: '#dc3545',
+      color: '#fff',
+      border: 'none',
+      padding: '10px 15px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+      fontSize: '16px',
     },
     searchBar: {
       marginBottom: '20px',
@@ -121,11 +140,16 @@ const EmployeeList = () => {
 
   return (
     <div style={styles.container}>
-      <h2 style={styles.title}>Employees List</h2>
+      <div style={styles.header}>
+        <h2 style={styles.title}>Employee Management System</h2>
+        <button style={styles.logoutButton} onClick={handleLogout}>
+          Logout
+        </button>
+      </div>
+
       <button style={styles.addButton} onClick={() => navigate('/add-employee')}>
         Add Employee
       </button>
-      {/* Search Bar */}
       <input
         type="text"
         placeholder="Search by Department or Position"
