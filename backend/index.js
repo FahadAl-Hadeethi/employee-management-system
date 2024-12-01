@@ -8,11 +8,17 @@ require('dotenv').config();
 const app = express();
 app.use(express.json());
 
-// Enable CORS
+// Enabling CORS
+const cors = require('cors');
+
+const allowedOrigins = [
+  'https://one01432174-comp3123-assignment2-reactjs.onrender.com',
+];
+
 app.use(cors({
-  origin: 'http://localhost:3001', // Allow requests from frontend
-  methods: 'GET,POST,PUT,DELETE', // Allowed methods
-  credentials: true, // Include credentials in requests
+  origin: allowedOrigins,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
 }));
 
 // Connect to MongoDB
