@@ -9,8 +9,6 @@ const app = express();
 app.use(express.json());
 
 // Enabling CORS
-const cors = require('cors');
-
 const allowedOrigins = [
   'https://one01432174-comp3123-assignment2-reactjs.onrender.com',
 ];
