@@ -10,13 +10,13 @@ app.use(express.json());
 
 // Enabling CORS
 const allowedOrigins = [
-  'https://one01432174-comp3123-assignment2-reactjs.onrender.com',
+  'https://one01432174-comp3123-assignment2-reactjs-pe0g.onrender.com', // Deployed frontend
 ];
 
 app.use(cors({
   origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  credentials: true, // 
 }));
 
 // Connect to MongoDB
