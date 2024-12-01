@@ -54,29 +54,3 @@ exports.deleteEmployee = async (req, res) => {
     return res.status(500).json({ message: 'Error deleting employee', error }); // Return an error message
   }
 };
-
-// Search for employees by department and/or position
-exports.searchEmployees = async (req, res) => {
-  const { department, position } = req.query; // Extract query parameters
-
-  try {
-    // Build the query dynamically
-    const query = {};
-    if (department) query.department = { $regex: department, $options: 'i' };
-    if (position) query.position = { $regex: position, $options: 'i' };
-
-    // Execute the query
-    const employees = await Employee.find(query);
-
-    // Handle no results found
-    if (!employees.length) {
-      return res.status(404).json({ message: 'No employees found matching the criteria' });
-    }
-
-    // Return results
-    res.status(200).json(employees);
-  } catch (error) {
-    console.error('Error fetching employees:', error);
-    res.status(500).json({ message: 'Error fetching employees', error });
-  }
-};

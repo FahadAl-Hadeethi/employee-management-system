@@ -25,8 +25,5 @@ router.put('/employees/:eid', updateEmployee);
 // Route to delete an employee by ID
 router.delete('/employees', deleteEmployee);
 
-// Route to search employees by department or position
-router.get('/employees/search', searchEmployees);
-
 // Export the router (only once)
 module.exports = router;

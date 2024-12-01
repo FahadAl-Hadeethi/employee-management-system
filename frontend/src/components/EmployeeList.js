@@ -3,36 +3,52 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const EmployeeList = () => {
-  const [employees, setEmployees] = useState([]);
+  const [employees, setEmployees] = useState([]); // Complete employee list
+  const [filteredEmployees, setFilteredEmployees] = useState([]); // Filtered list
+  const [searchQuery, setSearchQuery] = useState(''); // Search input value
   const navigate = useNavigate();
 
-  // Fetch employees from the backend
   const fetchEmployees = async () => {
     try {
-      const response = await api.get('/api/v1/emp/employees'); // Ensure this matches the backend endpoint
+      const response = await api.get('/api/v1/emp/employees');
       setEmployees(response.data);
+      setFilteredEmployees(response.data); // Initially show all employees
     } catch (error) {
       console.error(error.response?.data?.message || 'Failed to fetch employees');
-    }
-  };
-
-  // Delete an employee
-  const deleteEmployee = async (id) => {
-    if (window.confirm('Are you sure you want to delete this employee?')) {
-      try {
-        await api.delete(`/api/v1/emp/employees/${id}`);
-        alert('Employee deleted successfully');
-        fetchEmployees(); // Refresh the list after deletion
-      } catch (error) {
-        console.error(error.response?.data?.message || 'Failed to delete employee');
-        alert('Failed to delete employee');
-      }
     }
   };
 
   useEffect(() => {
     fetchEmployees();
   }, []);
+
+  // Handle search input changes
+  const handleSearch = (e) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+
+    const filtered = employees.filter((employee) => {
+      return (
+        employee.department?.toLowerCase().includes(query) ||
+        employee.position?.toLowerCase().includes(query)
+      );
+    });
+
+    setFilteredEmployees(filtered);
+  };
+
+  const deleteEmployee = async (id) => {
+    if (window.confirm('Are you sure you want to delete this employee?')) {
+      try {
+        const response = await api.delete('/api/v1/emp/employees', { params: { eid: id } });
+        alert(response.data.message || 'Employee deleted successfully');
+        fetchEmployees(); // Refresh the employee list after deletion
+      } catch (error) {
+        console.error('Delete Error:', error.response?.data || error.message);
+        alert(error.response?.data?.message || 'Failed to delete employee. Please try again.');
+      }
+    }
+  };
 
   const styles = {
     container: {
@@ -45,10 +61,18 @@ const EmployeeList = () => {
     },
     title: {
       textAlign: 'center',
-      marginBottom: '30px',
+      marginBottom: '20px',
       fontSize: '24px',
       fontWeight: 'bold',
       color: '#333',
+    },
+    searchBar: {
+      marginBottom: '20px',
+      width: '100%',
+      padding: '10px',
+      borderRadius: '5px',
+      border: '1px solid #ccc',
+      fontSize: '16px',
     },
     table: {
       width: '100%',
@@ -101,21 +125,33 @@ const EmployeeList = () => {
       <button style={styles.addButton} onClick={() => navigate('/add-employee')}>
         Add Employee
       </button>
+      {/* Search Bar */}
+      <input
+        type="text"
+        placeholder="Search by Department or Position"
+        value={searchQuery}
+        onChange={handleSearch}
+        style={styles.searchBar}
+      />
       <table style={styles.table}>
         <thead>
           <tr>
             <th style={styles.th}>First Name</th>
             <th style={styles.th}>Last Name</th>
             <th style={styles.th}>Email</th>
+            <th style={styles.th}>Position</th>
+            <th style={styles.th}>Department</th>
             <th style={styles.th}>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {employees.map((employee) => (
+          {filteredEmployees.map((employee) => (
             <tr key={employee._id}>
               <td style={styles.td}>{employee.first_name}</td>
               <td style={styles.td}>{employee.last_name}</td>
               <td style={styles.td}>{employee.email}</td>
+              <td style={styles.td}>{employee.position || 'N/A'}</td>
+              <td style={styles.td}>{employee.department || 'N/A'}</td>
               <td style={styles.td}>
                 <button
                   style={{ ...styles.button, ...styles.viewButton }}
@@ -138,13 +174,6 @@ const EmployeeList = () => {
               </td>
             </tr>
           ))}
-          {employees.length === 0 && (
-            <tr>
-              <td style={styles.td} colSpan="4">
-                No employees found.
-              </td>
-            </tr>
-          )}
         </tbody>
       </table>
     </div>
