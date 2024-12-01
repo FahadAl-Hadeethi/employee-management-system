@@ -3,22 +3,27 @@ import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const Login = () => {
-  const [email, setEmail] = useState(''); // State for email
-  const [password, setPassword] = useState(''); // State for password
-  const [error, setError] = useState(''); // State for error message
-  const navigate = useNavigate(); // Hook to navigate between routes
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [hover, setHover] = useState(false);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const response = await api.post('/api/v1/user/login', { email, password });
-      localStorage.setItem('token', response.data.token); // Store token in localStorage
+      localStorage.setItem('authToken', response.data.token);
       alert('Login successful!');
-      navigate('/employees'); // Navigate to the employee list page
+      navigate('/employees', { replace: true });
     } catch (error) {
-      setError(error.response?.data?.message || 'Login failed!'); // Set error message
+      setError(error.response?.data?.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
-  };  
+  };
 
   const styles = {
     container: {
@@ -53,6 +58,7 @@ const Login = () => {
       fontSize: '16px',
       cursor: 'pointer',
       marginTop: '10px',
+      transition: 'background-color 0.3s ease, transform 0.2s ease',
     },
     buttonHover: {
       backgroundColor: '#0056b3',
@@ -62,8 +68,11 @@ const Login = () => {
       fontSize: '14px',
       marginBottom: '15px',
       textAlign: 'center',
+      role: 'alert',
     },
   };
+
+  const buttonStyles = hover ? { ...styles.button, ...styles.buttonHover } : styles.button;
 
   return (
     <div style={styles.container}>
@@ -86,13 +95,21 @@ const Login = () => {
           required
         />
         {error && <p style={styles.errorMessage}>{error}</p>}
-        <button type="submit" style={styles.button}>Login</button>
+        <button
+          type="submit"
+          style={buttonStyles}
+          onMouseEnter={() => setHover(true)}
+          onMouseLeave={() => setHover(false)}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Logging in...' : 'Login'}
+        </button>
         <p style={{ textAlign: 'center', marginTop: '10px' }}>
           Don't have an account? <span onClick={() => navigate('/signup')} style={{ color: '#007bff', cursor: 'pointer' }}>Signup</span>
         </p>
       </form>
     </div>
-  );  
+  );
 };
 
 export default Login;
