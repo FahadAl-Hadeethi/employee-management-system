@@ -5,7 +5,7 @@ const {
   getEmployeeById,
   updateEmployee,
   deleteEmployee,
-  searchEmployees
+  searchEmployee, // Import the search function
 } = require('../controllers/employeeController');
 
 const router = express.Router();
@@ -25,5 +25,8 @@ router.put('/employees/:eid', updateEmployee);
 // Route to delete an employee by ID
 router.delete('/employees', deleteEmployee);
 
-// Export the router (only once)
+// Route to search employees by department or position
+router.get('/employees/search', searchEmployee); // Corrected function name
+
+// Export the router
 module.exports = router;
