@@ -1,3 +1,7 @@
 .env
 .env.*
 !.env.example
+
+# Angular cache and build output
+frontend/.angular/
+frontend/dist/
